@@ -1,7 +1,7 @@
 document.getElementById('getText').addEventListener('click', getText);
 document.getElementById('getUsers').addEventListener('click', getUsers);
 document.getElementById('getPosts').addEventListener('click', getPosts);
-document.getElementById('addPost').addEventListener('click', addPost);
+document.getElementById('addPost').addEventListener('submit', addPost);
 
 function getText() {
     fetch('sample.txt')
@@ -16,15 +16,13 @@ function getUsers() {
     fetch('users.json')
     .then(res => res.json())
     .then(data => {
-        let output = '<h2>Users</h2>';
-        data.forEach(function(user) {
-            output += `
-                <ul>
-                    <li>ID: ${user.id}</li>
-                    <li>Name: ${user.name}</li>
-                    <li>Email: ${user.email}</li>
-                </ul>
-            `;
+        let output = '<h2 class="mb-4">Users</h2>';
+        data.forEach(user => {
+            output += ` <ul class="list-group mb-3">
+                            <li class="list-group-item">ID: ${user.id}</li>
+                            <li class="list-group-item">Name: ${user.name}</li>
+                            <li class="list-group-item">Email: ${user.email}</li>
+                        </ul> `;
         });
         document.getElementById(`output`).innerHTML = output;
     })
@@ -34,10 +32,10 @@ function getPosts() {
     fetch('https://jsonplaceholder.typicode.com/posts')
     .then(res => res.json())
     .then(data => {
-        let output = '<h2>Posts</h2>';
+        let output = '<h2 class="mb-4">Posts</h2>';
         data.forEach(post => {
             output += `
-                <div>
+                <div class="card card-body mb-3">
                     <h3>${post.title}</h3>
                     <p>${post.body}</p>
                 </div>
@@ -47,12 +45,13 @@ function getPosts() {
     })
 }
 // allowing us to post to the api
-function addPost(e) {
+function addPost(e){
     // to stop it from actually submitting to the file
     e.preventDefault();
     let title = document.querySelector(`#title`).value;
     let body = document.querySelector(`#body`).value;
-
+    console.log(title);
+    console.log(body);
     fetch('https://jsonplaceholder.typicode.com/posts', {
         method: 'POST',
         headers: {
@@ -60,6 +59,7 @@ function addPost(e) {
             'Content-type': 'application/json'
         },
         body: JSON.stringify({title:title, body:body})
+        // body:JSON.stringify({title, body})
     })
     .then(res => res.json())
     .then(data => console.log(data))
@@ -70,7 +70,7 @@ function addPost(e) {
 //     let url = 'sample.txt';
 //     try {
 //         let res = await fetch(url);
-//         // return await res.json();
+        // return await res.json();
 //     } catch (error) {
 //         console.log(error);
 //     }
